@@ -3,12 +3,7 @@ import { useState, useRef, useEffect } from "react";
 /* ======================
    BACKEND BASE URL
 ====================== */
-// Use the correct active domain from your Vercel deployment
-// Override with env var in production if needed
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://chat-box-ai-backend.vercel.app";
-
+const API_BASE_URL = "https://chat-box-ai-backend.vercel.app/api"; // direct stable backend URL
 
 export default function App() {
   const [open, setOpen] = useState(false);
@@ -22,7 +17,7 @@ export default function App() {
 
   /* ======================
      TEXT TO SPEECH
-  ======================= */
+  ====================== */
   const speak = (text) => {
     window.speechSynthesis.cancel();
     const speech = new SpeechSynthesisUtterance(text);
@@ -32,7 +27,7 @@ export default function App() {
 
   /* ======================
      VOICE INPUT
-  ======================= */
+  ====================== */
   const startListening = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
@@ -56,7 +51,7 @@ export default function App() {
 
   /* ======================
      BACKEND API CALL
-  ======================= */
+  ====================== */
   const askBackend = async (question) => {
     if (!question.trim()) return;
     setIsLoading(true);
@@ -84,14 +79,14 @@ export default function App() {
 
   /* ======================
      ADD MESSAGE
-  ======================= */
+  ====================== */
   const addMessage = (type, text) => {
     setMessages((prev) => [...prev, { type, text }]);
   };
 
   /* ======================
      TEXT SUBMIT
-  ======================= */
+  ====================== */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputText.trim() || isLoading) return;
@@ -102,18 +97,18 @@ export default function App() {
 
   /* ======================
      CLOSE CHAT
-  ======================= */
+  ====================== */
   const closeChat = () => {
     window.speechSynthesis.cancel();
     recognitionRef.current?.stop();
-    fetch(`${API_BASE_URL}/clear`, { method: "POST" }).catch(() => {}); // silent cleanup
+    fetch(`${API_BASE_URL}/clear`, { method: "POST" }).catch(() => {});
     setMessages([{ type: "agent", text: "Hello! Please ask a question." }]);
     setOpen(false);
   };
 
   /* ======================
      CLEAR CHAT ON TAB CLOSE
-  ======================= */
+  ====================== */
   useEffect(() => {
     const handleUnload = () => {
       navigator.sendBeacon(`${API_BASE_URL}/clear`);
@@ -124,7 +119,7 @@ export default function App() {
 
   /* ======================
      AUTO SCROLL
-  ======================= */
+  ====================== */
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -142,7 +137,6 @@ export default function App() {
 
       {open && (
         <div className="fixed bottom-6 right-6 w-[92vw] sm:w-96 h-[75vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden">
-          {/* Header */}
           <div className="flex justify-between items-center p-4 border-b bg-gray-50">
             <h2 className="font-bold text-gray-800">AI Assistant</h2>
             <button
@@ -153,12 +147,13 @@ export default function App() {
             </button>
           </div>
 
-          {/* Chat Messages */}
           <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex ${
+                  msg.type === "user" ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`px-4 py-2 rounded-2xl text-sm max-w-[80%] ${
@@ -183,7 +178,6 @@ export default function App() {
             <div ref={chatEndRef} />
           </div>
 
-          {/* Input Area */}
           <form
             onSubmit={handleSubmit}
             className="flex gap-2 p-4 border-t bg-white"
@@ -204,7 +198,6 @@ export default function App() {
             </button>
           </form>
 
-          {/* Voice Button */}
           <div className="px-4 pb-4 pt-0">
             <button
               onClick={startListening}
