@@ -9,6 +9,7 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   "https://chat-box-ai-backend.vercel.app";
 
+
 export default function App() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
