@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 /* ======================
    BACKEND BASE URL
 ====================== */
-const API_BASE_URL = "https://chat-box-ai-backend.vercel.app/api"; // direct stable backend URL
+const API_BASE_URL = "https://chat-box-ai-backend.vercel.app"; // direct stable backend URL
 
 export default function App() {
   const [open, setOpen] = useState(false);
@@ -58,7 +58,7 @@ export default function App() {
     addMessage("user", question);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/ask`, {
+      const res = await fetch(`${API_BASE_URL}/ask`, { // <-- use /ask, not /api/ask
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
